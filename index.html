@@ -24,6 +24,7 @@
                 var policeman_name = $("#policeman_name").val();
                 var policeman_rank = $("#policeman_rank").val();
                 var policeman_id = $("#policeman_id").val();
+                var photo  = $("#photo").val();
                 var policeman_known = policeman_rank || policeman_name || policeman_name;
 
                 document.other_violations = "";
@@ -516,7 +517,7 @@
                         <p><small>В связи с вышеизложенным, руководствуясь УПК РФ, ФЗ «О Прокуратуре РФ», а также Письмом Генпрокуратуры РФ от 27 февраля 2004 г. N 36-12-2004 «О методических рекомендациях по организации работы прокуратуры по надзору за исполнением законодательства об административных правонарушениях» ПРОШУ органы прокуратуры:</small></p>
                     </div>
                     <div class="col-sm-9" id="claims">
-                        <div class="checkbox"><label><input type="checkbox"/>По фактам, изложенным в моей жалобе, прошу провести проверку правомерности и законности действий сотрудников полиции</label></div>
+                        <div class="checkbox"><label><input type="checkbox" id="photo"/>По фактам, изложенным в моей жалобе, прошу провести проверку правомерности и законности действий сотрудников полиции</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>Установить лиц, задержавших меня, доставивших меня в отделение и подвергших меня административному задержанию в отделе полиции</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>Возбудить в отношении лиц, допустивших нарушение моих прав и свобод уголовное преследование по статьям 286 и 301 УК РФ</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>сли факты административного задержания и доставления будут признаны законными, мотивировано сообщить на каких именно юридических основаниях эти действия были произведены</label></div>
@@ -544,6 +545,7 @@
                 <textarea id="claim" class="form-control" style="height: 30em;">
                 </textarea>
                 <textarea id="claim-source" class="hidden">
+                {{#if photo }} Озу был тут.{{/if}}
 Я, {{family_name}} {{first_name}} {{middle_name}},  был задержан {{detention_date}} в {{detention_time}}.
 {{#if policemen_violates}}Задержавшие меня сотрудники:
 {{#unless policemen_introduced}}- не представились;{{/unless}}
