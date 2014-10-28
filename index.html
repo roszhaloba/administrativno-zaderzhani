@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
@@ -40,31 +39,32 @@
                     }
                 });
 
+                console.log($("#policeyskiye_predstavilis").val());
                 $("#claim").html(template({
-                    familiya:                $("#familiya").val(),
-                    imia:                    $("#imia").val(),
-                    otchestvo:               $("#otchestvo").val(),
-                    data_zaderzhaniya:       $("#data_zaderzhaniya input").val(),
-                    vremya_zaderzhaniya:     $("#vremya_zaderzhaniya input").val(),
+                    familiya:                            $("#familiya").val(),
+                    imia:                                $("#imia").val(),
+                    otchestvo:                           $("#otchestvo").val(),
+                    data_zaderzhaniya:                   $("#data_zaderzhaniya input").val(),
+                    vremya_zaderzhaniya:                 $("#vremya_zaderzhaniya input").val(),
 
-                    policemen_introduced:    policemen_introduced,
-                    policemen_introduced_other: $("#policemen-introduced-other").val(),
-                    rights_read:             rights_read,
-                    rights_read_other:       $("#rights-read-other").val(),
-                    policemen_violates:      !policemen_introduced || !rights_read,
-                    policeman_name:          policeman_name,
-                    policeman_rank:          policeman_rank,
-                    policeman_id:            policeman_id,
-                    policeman_known:         policeman_known,
-                    station_address:         $("#station-address").val(),
-                    in_stat_date:            $("#in_stat_date input").val(),
-                    in_stat_time:            $("#in_stat_time input").val(),
-                    fact_date:               $("#fact_date input").val(),
-                    fact_time:               $("#fact_time input").val(),
-                    out_stat_date:           $("#out_stat_date input").val(),
-                    out_stat_time:           $("#out_stat_time input").val(),
-                    claims:                 document.claims,
-                    other_violations:       document.other_violations
+                    policeyskiye_predstavilis:           $("#policeyskiye_predstavilis"),
+                    policeyskiye_predstavilis_drugoe:    $("#policeyskiye_predstavilis_drugoe").val(),
+                    rights_read:                         rights_read,
+                    rights_read_other:                   $("#rights-read-other").val(),
+                    policemen_violates:                  !policemen_introduced || !rights_read,
+                    policeman_name:                      policeman_name,
+                    policeman_rank:                      policeman_rank,
+                    policeman_id:                        policeman_id,
+                    policeman_known:                     policeman_known,
+                    station_address:                     $("#station-address").val(),
+                    in_stat_date:                        $("#in_stat_date input").val(),
+                    in_stat_time:                        $("#in_stat_time input").val(),
+                    fact_date:                           $("#fact_date input").val(),
+                    fact_time:                           $("#fact_time input").val(),
+                    out_stat_date:                       $("#out_stat_date input").val(),
+                    out_stat_time:                       $("#out_stat_time input").val(),
+                    claims:                              document.claims,
+                    other_violations:                    document.other_violations
                 }));
             });
         });
@@ -449,7 +449,7 @@
                         <div class="checkbox"><label><input type="checkbox"/>По фактам, изложенным в моей жалобе, прошу провести проверку правомерности и законности действий сотрудников полиции</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>Установить лиц, задержавших меня, доставивших меня в отделение и подвергших меня административному задержанию в отделе полиции</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>Возбудить в отношении лиц, допустивших нарушение моих прав и свобод уголовное преследование по статьям 286 и 301 УК РФ</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>сли факты административного задержания и доставления будут признаны законными, мотивировано сообщить на каких именно юридических основаниях эти действия были произведены</label></div>
+                        <div class="checkbox"><label><input type="checkbox"/>Eсли факты административного задержания и доставления будут признаны законными, мотивировано сообщить на каких именно юридических основаниях эти действия были произведены</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>Прошу прислать мне мотивированное постановление о возбуждении (или отказе в возбуждении) уголовного дела в установленный УПК РФ</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>Прошу письменно ответить мне на все поставленные вопросы в установленном порядке</label></div></div></div>
             </form>
