@@ -18,66 +18,45 @@
                 $("#familiya").val("Обычный");
                 $("#imia").val("Человек");
                 $("#otchestvo").val("Человеков");
-                $("[name='policeyskiye_predstavilis'][value='yes']").prop('checked',true);
-                $("[name='obyasnili_prichiny'][value='yes']").prop('checked',true);
+                $("[name='policeyskiye_predstavilis'][value='no']").prop('checked',true);
+                $("[name='obyasnili_prichiny'][value='no']").prop('checked',true);
                 $("#fio_zaderzhavshego").val("Мент Метов Метович");
                 $("#dolzhnost_zaderzhavshego").val("Майор Милиции");
                 $("#nomer_zhetona_zaderzhavshego").val("666");
-                $("#nomer_otdela_policii").val("777");
-                
+                $("#nomer_otdela_policii").val("1");
+                $("[name='zakonnost_aresta'][value='no']").prop('checked',true);
+                $("[name='zakonnost_dosmotra'][value='no']").prop('checked',true);
             }
             set_initial_state();
 
             $("#fill-form").click(function() {
                 var source =                             $("#shablon_zhaloby").html();
                 var template =                           Handlebars.compile(source);
-
-                var policeyskiye_predstavilis =          $("input[name=policemen-introduced]:checked").val() == "yes";
-                var rights_read =                        $("input[name=rights-read]:checked").val() == "yes";
-
-                var policeman_name =                     $("#policeman_name").val();
-                var policeman_rank =                     $("#policeman_rank").val();
-                var policeman_id =                       $("#policeman_id").val();
-                var policeman_known =                    policeman_rank || policeman_name || policeman_name;
+                var policeyskiye_predstavilis =          $("input[name=policeyskiye_predstavilis]:checked").val() == "yes";
+                var obyasnili_prichiny =                 $("input[name=obyasnili_prichiny]:checked").val() == "yes";
+                var narusheniya_pri_zaderzhanii =        !policeyskiye_predstavilis || !obyasnili_prichiny; 
+                console.log(policeyskiye_predstavilis, obyasnili_prichiny, narusheniya_pri_zaderzhanii);
 
                 document.drugie_narusheniya = "";
                 $("#other-violations div.checkbox").each(function() {
                     if ($(this).find("input").is(":checked")) {
-                        document.other_violations += "- " + $(this).text() + ";\n";
-                    }
-                });
+                        document.other_violations += "- " + $(this).text() + ";\n"; }});
 
                 document.claims = "";
                 $("#claims div.checkbox").each(function() {
                     if ($(this).find("input").is(":checked")) {
-                        document.claims += "- " + $(this).text() + ";\n";
-                    }
-                });
+                        document.claims += "- " + $(this).text() + ";\n"; } });
 
-                console.log($("input[name=policeyskiye_predstavilis]:checked").val());
                 $("#claim").html(template({
                     familiya:                            $("#familiya").val(),
                     imia:                                $("#imia").val(),
                     otchestvo:                           $("#otchestvo").val(),
                     data_zaderzhaniya:                   $("#data_zaderzhaniya input").val(),
                     vremya_zaderzhaniya:                 $("#vremya_zaderzhaniya input").val(),
-
-                    policeyskiye_predstavilis:           $("#policeyskiye_predstavilis"),
+                    policeyskiye_predstavilis:           $("#policeyskiye_predstavilis").val(),
                     policeyskiye_predstavilis_drugoe:    $("#policeyskiye_predstavilis_drugoe").val(),
-                    rights_read:                         rights_read,
-                    rights_read_other:                   $("#rights-read-other").val(),
-                    narusheniya_pri_zaderzhanii:         !policeyskiye_predstavilis || !obyasnili_prichiny,
-                    policeman_name:                      policeman_name,
-                    policeman_rank:                      policeman_rank,
-                    policeman_id:                        policeman_id,
-                    policeman_known:                     policeman_known,
-                    station_address:                     $("#station-address").val(),
-                    in_stat_date:                        $("#in_stat_date input").val(),
-                    in_stat_time:                        $("#in_stat_time input").val(),
-                    fact_date:                           $("#fact_date input").val(),
-                    fact_time:                           $("#fact_time input").val(),
-                    out_stat_date:                       $("#out_stat_date input").val(),
-                    out_stat_time:                       $("#out_stat_time input").val(),
+                    fio_zaderzhavshego:                  $("#fio_zaderzhavshego").val(),
+                    narusheniya_pri_zaderzhanii:         narusheniya_pri_zaderzhanii,
                     claims:                              document.claims,
                     other_violations:                    document.other_violations
                 }));
@@ -254,18 +233,18 @@
                     <div class="control-label col-sm-3"><label>Предусматривала ли хоть одна из инкриминируемых Вам статей арест?</label>
                         <p><small>Следующие статьи КоАП РФ предусматривают назначение административного ареста: 5.35 ч. 3; 6.8 ч. 1; 6.8 ч. 2; 6.9 ч. 1; 6.9 ч. 2; 6.12; 6.13 ч. 2; 7.27; 10.5.1; 11.1 ч. 1; 11.17 ч. 6; 12.7 ч. 2; 12.3 ч. 3; 12.26 ч. 2; 12.27 ч. 2; 17.16 ч. 3; 19.3 ч. 1; 19.3 ч. 3; 19.24 ч. 1; 20.1 ч. 1; 20.1 ч. 2; 20.2 ч. 3; 20.3 ч. 1; 20.5; 20.8 ч. 6; 20.9; 20.25 ч. 1; 20.25 ч.2; 20.27 ч. 3; 20.29.</small></p></div>
                     <div class="col-sm-9">
-                        <div class="radio"><label><input name="zaonnost_aresta" type="radio"/>Да</label></div>
-                        <div class="radio"><label><input name="zaonnost_aresta" type="radio"/>Нет</label></div>
-                        <div class="radio"><label><input name="zaonnost_aresta" type="radio"/>Иное:</label><br/>
+                        <div class="radio"><label><input name="zakonnost_aresta" type="radio" value="yes">Да</label></div>
+                        <div class="radio"><label><input name="zakonnost_aresta" type="radio" value="no"/>Нет</label></div>
+                        <div class="radio"><label><input name="zakonnost_aresta" type="radio" value="other"/>Иное:</label><br/>
                             <textarea class="form-control"></textarea></div></div></div>
 
                 <div class="form-group">
                     <div class="control-label col-sm-3"><label>В отношении Вас был произведен личный досмотр без достаточных оснований?</label>
                         <p><small>Если досмотр производился непосредственно перед помещением в КАЗ (камеру для содержания задержанных), то основания можно считать достаточными.</small></p></div>
                     <div class="col-sm-9">
-                        <div class="radio"><label><input name="zakonnost_dosmotra" type="radio"/>Да</label></div>
-                        <div class="radio"><label><input name="zakonnost_dosmotra" type="radio"/>Нет</label></div>
-                        <div class="radio"><label><input name="zakonnost_dosmotra" type="radio"/>Иное:</label><br/>
+                        <div class="radio"><label><input name="zakonnost_dosmotra" type="radio" value="yes">Да</label></div>
+                        <div class="radio"><label><input name="zakonnost_dosmotra" type="radio" value="no"/>Нет</label></div>
+                        <div class="radio"><label><input name="zakonnost_dosmotra" type="radio" value="other"/>Иное:</label><br/>
                             <textarea class="form-control"></textarea></div></div></div>
 
                 <div class="form-group">
@@ -335,9 +314,12 @@
                 
 Я, {{familiya}} {{imia}} {{otchestvo}}, был задержан {{data_zaderzhaniya}} в {{vremya_zaderzhaniya}}.
 
-{{#if narusheniya_pri_zaderzhanii}}Задержавшие меня сотрудники {{#unless policeyskiye_predstavilis}} не представились,{{/unless}}
-{{#if policeyskiye_predstavilis_drugoe}}{{policeyskiye_predstavilis_drugoe}}{{/if}} 
-{{#unless obyasnili_prichiny}} не сообщили мне причину применения мер, ограничивающих мою свободу,{{/unless}} несмотря на то, что в соответствии с п. 4 ст. 5 Федерального закона «О полиции» № 3-ФЗ при обращении к гражданину сотрудник полиции обязан: 1) назвать свои должность, звание, фамилию,предъявить по требованию гражданина служебное удостоверение, после чего сообщить причину и цель обращения; 2) в случае применения к гражданину мер, ограничивающих его права и свободы, разъяснить ему причину и основания применения таких мер, а также возникающие в связи с этим права и обязанности гражданина.{{/if}}
+{{#if narusheniya_pri_zaderzhanii}}Задержавшие меня сотрудники: 
+{{#unless policeyskiye_predstavilis}}- не представились,{{/unless}}
+{{#if policeyskiye_predstavilis_drugoe}}- {{policeyskiye_predstavilis_drugoe}}{{/if}} 
+{{#unless obyasnili_prichiny}}- не сообщили мне причину применения мер, ограничивающих мою свободу,{{/unless}} 
+несмотря на то, что в соответствии с п. 4 ст. 5 Федерального закона «О полиции» № 3-ФЗ при обращении к гражданину сотрудник полиции обязан: 1) назвать свои должность, звание, фамилию,предъявить по требованию гражданина служебное удостоверение, после чего сообщить причину и цель обращения; 2) в случае применения к гражданину мер, ограничивающих его права и свободы, разъяснить ему причину и основания применения таких мер, а также возникающие в связи с этим права и обязанности гражданина.{{/if}}
+
 {{#if policeyskiye_predstavilis}}Меня задержал сотрудник полиции {{fio_zaderzhavshego}} {{fio_zaderzhavshego}} {{#if nomer_zhetona_zaderzhavshego}}, номер жетона {{nomer_zhetona_zaderzhavshego}}{{/if}}.
 {{/if}}
 
