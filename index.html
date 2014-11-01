@@ -5,7 +5,11 @@
     <title></title>
     <link href="css/bootstrap.min.css" rel="stylesheet" media="all"/>
     <link href="css/bootstrap-formhelpers.min.css" rel="stylesheet" media="all"/>
-
+    <style type='text/css'>
+        #zhaloba {
+            font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace;
+        }
+    </style>
     <script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/handlebars-v2.0.0.js"></script>
@@ -28,67 +32,89 @@
                 $("[name='zakonnost_dosmotra'][value='no']").prop('checked',true);
             }
             set_initial_state();
+            zapolnit_formu();
 
-            $("#fill-form").click(function() {
+            $("#fill-form").click(function() { zapolnit_formu() });
+            
+            function zapolnit_formu() {
                 var source =                             $("#shablon_zhaloby").html();
                 var template =                           Handlebars.compile(source);
                 var policeyskiye_predstavilis =          $("input[name=policeyskiye_predstavilis]:checked").val() == "yes";
                 var obyasnili_prichiny =                 $("input[name=obyasnili_prichiny]:checked").val() == "yes";
                 var narusheniya_pri_zaderzhanii =        !policeyskiye_predstavilis || !obyasnili_prichiny; 
-                var derzhali_nezakonno_dolgo =           1; //if vremya_osvobozhdeniya - vremya_dostavleniya = 3hours
-                var nasilno_vnesli_v_basu =              1; //if nasilno_sfotografirovali or nasilno_daktiloskopirovali
-                var nasilno_sfotografirovali =           1; //if nasilno_sfotografirovali 
-                var nasilno_daktiloskopirovali =         1; //if nasilno_daktiloskopirovali 
-                var narusheniya_pri_dosmotre =           1; //if narusheniya_pri_dosmotre
-                console.log(policeyskiye_predstavilis, obyasnili_prichiny, narusheniya_pri_zaderzhanii);
+
+                var vremya_dostavleniya =                $("#vremya_dostavleniya").val();
+                var data_dostavleniya =                  $("#data_dostavleniya").val();
+                var vremya_osvobozhdeniya =              $("#vremya_osvobozhdeniya").val();
+                var data_osvobozhdeniya =                $("#data_osvobozhdeniya").val();
+                var d = Math.abs(new Date(data_dostavleniya + " " + vremya_dostavleniya) 
+                               - new Date(data_osvobozhdeniya + " " + vremya_osvobozhdeniya));
+                if ( d > 3600000*3 ) {
+                var derzhali_nezakonno_dolgo = 1};
+                console.log("result", d, new Date());
+
+                var nasilno_sfotografirovali =           $("#nasilno_sfotografirovali").val();
+                var nasilno_daktiloskopirovali =         0; //if nasilno_daktiloskopirovali 
+                var nasilno_vnesli_v_basu =              0; //if nasilno_sfotografirovali or nasilno_daktiloskopirovali
+                var nasilno_sfotografirovali =           0; //if nasilno_sfotografirovali 
+                var nasilno_daktiloskopirovali =         0; //if nasilno_daktiloskopirovali 
+                var narusheniya_pri_dosmotre =           0; //if narusheniya_pri_dosmotr
 
                 document.drugie_narusheniya = "";
-                $("#other-violations div.checkbox").each(function() {
+                $("#drugie_narusheniya div.checkbox").each(function() {
                     if ($(this).find("input").is(":checked")) {
-                        document.drugie_zhalobi += "- " + $(this).text() + ";\n"; }});
-
+                        document.drugie_narusheniya += "- " + $(this).text() + ";\n"; }}); 
                 document.trebovaniya = "";
                 $("#trebovaniya div.checkbox").each(function() {
                     if ($(this).find("input").is(":checked")) {
-                        document.trebovaniya += "- " + $(this).text() + ";\n"; } });
+                        document.trebovaniya += "- " + $(this).text() + ";\n"; }});
 
                 $("#zhaloba").html(
                 template({
                     familiya:                            $("#familiya").val(),
                     imia:                                $("#imia").val(),
                     otchestvo:                           $("#otchestvo").val(),
+
                     data_zaderzhaniya:                   $("#data_zaderzhaniya input").val(),
                     vremya_zaderzhaniya:                 $("#vremya_zaderzhaniya input").val(),
+
                     narusheniya_pri_zaderzhanii:         narusheniya_pri_zaderzhanii,
                     policeyskiye_predstavilis:           policeyskiye_predstavilis,
                     policeyskiye_predstavilis_drugoe:    $("#policeyskiye_predstavilis_drugoe").val(),
                     obyasnili_prichiny:                  obyasnili_prichiny,
+
                     fio_zaderzhavshego:                  $("#fio_zaderzhavshego").val(),
                     nomer_zhetona_zaderzhavshego:        $("#nomer_zhetona_zaderzhavshego").val(),
                     nomer_otdela_policii:                $("#nomer_otdela_policii").val(),
-                    data_dostavleniya:                   $("#data_dostavleniya").val(),
-                    vremya_dostavleniya:                 $("#vremya_dostavleniya").val(),
+
+                    data_dostavleniya:                   $("#data_osvobozhdeniya").val(),
+                    vremya_dostavleniya:                 $("#vremya_zaderzhaniya").val(),
+
                     derzhali_nezakonno_dolgo:            derzhali_nezakonno_dolgo,
                     data_osvobozhdeniya:                 $("#data_osvobozhdeniya").val(),
                     vremya_osvobozhdeniya:               $("#vremya_zaderzhaniya").val(),
+
                     nasilno_vnesli_v_basu:               nasilno_vnesli_v_basu,
                     nasilno_sfotografirovali:            $("#nasilno_sfotografirovali").val(),
                     nasilno_daktiloskopirovali:          $("#nasilno_daktiloskopirovali").val(),
+
                     narusheniya_pri_dosmotre:            narusheniya_pri_dosmotre,
-                    dosotreli_bez_osnovaniy:             narusheniya_pri_dosmotre,
-                    dosmatrival_chelovek_drugogo_pola:   narusheniya_pri_dosmotre,
-                    ne_bilo_protocola:                   narusheniya_pri_dosmotre,
-                    ne_predostavleno_pitanie_spalnoe_mesto_lekarstva:    narusheniya_pri_dosmotre,
-                    ne_predostavleno_pitanie:            narusheniya_pri_zaderzhanii,
-                    bilo_tesno:                          narusheniya_pri_dosmotre,
-                    ne_predostavleni_lekarstva:          narusheniya_pri_dosmotre,
-                    razyasnili_prava:                    narusheniya_pri_dosmotre,
-                    vidali_kopiyu:                       narusheniya_pri_dosmotre,
-                    drugie_narusheniya:                  narusheniya_pri_dosmotre,
-                    trebovaniya:                         document.trebovaniya,
-                    drugie_zhalobi:                      document.drugie_zhalobi
+                    dosotreli_bez_osnovaniy:             0,
+                    dosmatrivali_bez_ponyatih:           0,
+                    dosmatrival_chelovek_drugogo_pola:   0,
+                    ne_bilo_protocola:                   0,
+
+                    ne_predostavleno_pitanie_spalnoe_mesto_lekarstva:    0,
+                    ne_predostavleno_pitanie:            0,
+                    bilo_tesno:                          0,
+                    ne_predostavleni_lekarstva:          0,
+
+                    ne_razyasnili_prava:                 0,
+                    ne_vidali_kopiyu:                    0,
+                    drugie_narusheniya:                  document.drugie_narusheniya,
+                    trebovaniya:                         document.trebovaniya
                 }));
-            });
+            };
         });
     </script>
 </head>
@@ -153,7 +179,7 @@
 
                 <div class="form-group"><label for="" class="control-label col-sm-3">Должность задержавшего Вас сотрудника:</label>
                     <div class="col-sm-9"><input type="text" class="form-control" id="dolzhnost_zaderzhavshego" placeholder=""/></div></div>
-
+    
                 <div class="form-group"><label for="" class="control-label col-sm-3">Номер жетона задержавшего Вас сотрудника полиции:</label>
                     <div class="col-sm-9"><input type="text" class="form-control" id="nomer_zhetona_zaderzhavshego" placeholder=""/></div></div>
 
@@ -237,9 +263,7 @@
                             <option value="76">76 ул.Мытнинская, 3 (Ценртральный)</option>
                             <option value="78">78 ул.Чехова, 15 (Ценртральный)</option>
                             <option value="79">79 ул. Гагаринская, 6а (Ценртральный)</option>
-                        </select>
-                    </div>
-                </div>
+                                </select></div></div>
 
                 <div class="form-group"><label for="" class="control-label col-sm-3">Время Вашего доставления в отдел полиции:</label>
                     <div class="col-sm-9 form-inline">
@@ -276,28 +300,29 @@
                             <textarea class="form-control"></textarea></div></div></div>
 
                 <div class="form-group">
+
                     <div class="control-label col-sm-3"><label>В отношении Вас был произведен личный досмотр и допущены следующие нарушения:</label></div>
                     <div class="col-sm-9">
-                        <div class="checkbox"><label><input type="checkbox"/>Личный досмотр производился в отсутствии двух понятых того же пола, что Ваш</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>Личный досмотр производил человек не того же пола, что Ваш</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>О личном досмотре не был ни составлен отдельный протокол, ни сделана соответствующая запись в протоколе об административном задержании</label></div></div></div>
+                        <div class="checkbox"><label><input id="dosmatrivali_bez_ponyatih" type="checkbox"/>Личный досмотр производился в отсутствии двух понятых того же пола, что Ваш</label></div>
+                        <div class="checkbox"><label><input id="dosmatrival_chelovek_drugogo_pola" type="checkbox"/>Личный досмотр производил человек не того же пола, что Ваш</label></div>
+                        <div class="checkbox"><label><input id="ne_bilo_protocola" type="checkbox"/>О личном досмотре не был ни составлен отдельный протокол, ни сделана соответствующая запись в протоколе об административном задержании</label></div></div></div>
 
                 <div class="form-group">
                     <div class="control-label col-sm-3">
                         <label>Иные нарушения?</label></div>
                     <div class="col-sm-9">
-                        <div class="checkbox"><label><input type="checkbox"/>К Вам применялось насильственное фотографирование (против вашей воли или если не было разъяснено, что эта процедура добровольна)?</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>К Вам применялось насильственное дактилоскопирование (против вашей воли или если не было разъяснено, что эта процедура добровольна)?</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>Вы провели в отделе ночь, но Вам не было предоставлено спальное место (то есть лавка, матрас и постельное белье)</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>Вам было тесно в камере (то есть на Вас приходилось меньше двух квадратных метров площади камеры)</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>Вы находились в отделе полиции больше трех часов, но Вам не было предоставлено горячее питание</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>Вам не разъясняли Ваши права во время заполнения протокола</label></div>
-                        <div class="checkbox"><label><input type="checkbox"/>Вам отказались выдать копию протокола</label></div></div></div>
+                        <div class="checkbox"><label><input id="nasilno_sfotografirovali" type="checkbox"/>К Вам применялось насильственное фотографирование (против вашей воли или если не было разъяснено, что эта процедура добровольна)?</label></div>
+                        <div class="checkbox"><label><input id="nasilno_daktiloskopirovali" type="checkbox"/>К Вам применялось насильственное дактилоскопирование (против вашей воли или если не было разъяснено, что эта процедура добровольна)?</label></div>
+                        <div class="checkbox"><label><input id="ne_predostavleno_spalnoe_mesto" type="checkbox"/>Вы провели в отделе ночь, но Вам не было предоставлено спальное место (то есть лавка, матрас и постельное белье)</label></div>
+                        <div class="checkbox"><label><input id="bilo_tesno" type="checkbox"/>Вам было тесно в камере (то есть на Вас приходилось меньше двух квадратных метров площади камеры)</label></div>
+                        <div class="checkbox"><label><input id="ne_dali_poest" type="checkbox"/>Вы находились в отделе полиции больше трех часов, но Вам не было предоставлено горячее питание</label></div>
+                        <div class="checkbox"><label><input id="ne_razyasnili_prava" type="checkbox"/>Вам не разъясняли Ваши права во время заполнения протокола</label></div>
+                        <div class="checkbox"><label><input id="ne_vidali_kopiyu" type="checkbox"/>Вам отказались выдать копию протокола</label></div></div></div>
 
                 <div class="form-group">
                     <div class="control-label col-sm-3">
                         <label>Отметьте, что из перечисленного относится к вашему пребыванию в отделе полиции:</label></div>
-                    <div class="col-sm-9" id="other-violations">
+                    <div class="col-sm-9" id="drugie_narusheniya">
                         <div class="checkbox"><label><input type="checkbox"/>Сотрудники полиции вели себя оскорбительно</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>Вам было холодно/жарко</label></div>
                         <div class="checkbox"><label><input type="checkbox"/>В КАЗе дурно пахло </label></div>
@@ -336,14 +361,15 @@
             <form>
             <div class="col-sm-12 form-group">
                 <h3>Текст жалобы:</h3>
-                <textarea id="zhaloba" class="form-control" style="height: 30em;">
+                <textarea id="zhaloba" class="form-control" style="height: 130em; font-family: monospace;">
                 </textarea>
                 <textarea id="shablon_zhaloby" class="hidden">
 --- ЗАЯВЛЕНИЕ
 
 --- Я, {{familiya}} {{imia}} {{otchestvo}}, был задержан {{data_zaderzhaniya}} в {{vremya_zaderzhaniya}}.
 
---- {{#if narusheniya_pri_zaderzhanii}}Задержавшие меня сотрудники: 
+{{#if narusheniya_pri_zaderzhanii}}
+--- Задержавшие меня сотрудники: 
 {{#unless policeyskiye_predstavilis}}
 --- - не представились,
 {{/unless}}
@@ -376,30 +402,29 @@
 --- и положения российского законодательства:
 
 {{#if nasilno_vnesli_v_basu}}
-Сотрудники полиции:
+--- Сотрудники полиции:
 {{#if nasilno_sfotografirovali}}
 --- - сфотографировали меня, 
 {{/if}}
 {{#if nasilno_daktiloskopirovali}}
 --- - провели дактилоскопирование, 
-в то время как п. 19 ст. 13 ФЗ «О полиции» устанавливает закрытый перечень случаев, в которых это может быть применено.
+в то время как п. 19 ст. 13 ФЗ «О полиции» устанавливает закрытый перечень случаев, в которых это может
+быть применено.
 {{/if}}
 {{/if}}
 
 {{#if narusheniya_pri_dosmotre}}
---- Полицейские  провели личный досмотр, порядок которого регламентирован ст. 27.7 КоАП РФ и был нарушен в отношении меня:
+--- Полицейские  провели личный досмотр, порядок которого регламентирован ст. 27.7 КоАП РФ и был нарушен 
+в отношении меня:
 {{#if dosotreli_bez_osnovaniy}}
 --- - в нарушение пункта 1 указанной статьи досмотр был произведен без достаточных оснований. 
 {{/if}}
-{{#if dosmatrival_chelovek_drugogo_pola}}
+{{#if dosmatrivali_bez_ponyatih}}
 --- - в нарушение пункта 3 указанной статьи при досмотре не присутствовали двое понятых того же пола 
 {{/if}}
-{{/if}}
-
 {{#if dosmatrival_chelovek_drugogo_pola}}
 --- - в нарушение пункта 3 указанной статьи досмотр производился человеком противоположного пола.
 {{/if}}
-
 {{#if ne_bilo_protocola}}
 --- - в нарушение п.7 ст. 27.7 КоАП РФ о досмотре не был ни составлен протокол, ни сделана запись 
 --- в протоколе о доставлении или в протоколе об административном задержании (п.7 ст. 27.7 КОаП РФ 
@@ -407,14 +432,13 @@
 --- протокол либо делается соответствующая запись в протоколе о доставлении или в протоколе 
 --- об административном задержании”.
 {{/if}}
+{{/if}}
 
 {{#if ne_predostavleno_pitanie_spalnoe_mesto_lekarstva}}
 --- В ходе моего содержания в отделении полиции были нарушены пункты ПОЛОЖЕНИЯ ОБ УСЛОВИЯХ СОДЕРЖАНИЯ ЛИЦ,
 --- ЗАДЕРЖАННЫХ ЗА АДМИНИСТРАТИВНОЕ ПРАВОНАРУШЕНИЕ, НОРМАХ ПИТАНИЯ И ПОРЯДКЕ МЕДИЦИНСКОГО ОБСЛУЖИВАНИЯ ТАКИХ ЛИЦ
 --- (в ред. Постановлений Правительства РФ от 01.02.2005 N 49, от 26.01.2011 N 24, от 04.09.2012 N 882,
 --- от 26.11.2013 N 1069), которое регламентирует условия содержания граждан в отделениях полиции.
-{{/if}}
-
 {{#if ne_predostavleno_pitanie}}
 --- ПОЛОЖЕНИЕ ОБ УСЛОВИЯХ СОДЕРЖАНИЯ ЛИЦ, ЗАДЕРЖАННЫХ ЗА АДМИНИСТРАТИВНОЕ ПРАВОНАРУШЕНИЕ, НОРМАХ ПИТАНИЯ 
 --- И ПОРЯДКЕ МЕДИЦИНСКОГО ОБСЛУЖИВАНИЯ ТАКИХ ЛИЦ (в ред. Постановлений Правительства РФ 
@@ -423,7 +447,6 @@
 --- утвержденной Постановлением Правительства Российской Федерации от 11 апреля 2005 г. N 205». 
 --- Несмотря на это я не был обеспечен питанием.
 {{/if}}
-
 {{#if ne_predostavleno_spalnoe_mesto}}_
 --- ПОЛОЖЕНИЕ ОБ УСЛОВИЯХ СОДЕРЖАНИЯ ЛИЦ, ЗАДЕРЖАННЫХ ЗА АДМИНИСТРАТИВНОЕ ПРАВОНАРУШЕНИЕ, 
 --- НОРМАХ ПИТАНИЯ И ПОРЯДКЕ МЕДИЦИНСКОГО ОБСЛУЖИВАНИЯ ТАКИХ ЛИЦ (в ред. Постановлений Правительства РФ 
@@ -439,7 +462,6 @@
 --- мне было тесно и приходящаяся на меня площадь составляла меньше двух квадратных метров.
 {{/if}}
 {{/if}}
-
 {{#if ne_predostavleni_lekarstva}}
 --- Несмотря на то, что согласно ст. 15 ПОЛОЖЕНИЕ ОБ УСЛОВИЯХ СОДЕРЖАНИЯ ЛИЦ, ЗАДЕРЖАННЫХ 
 ----ЗА АДМИНИСТРАТИВНОЕ ПРАВОНАРУШЕНИЕ, НОРМАХ ПИТАНИЯ И ПОРЯДКЕ МЕДИЦИНСКОГО ОБСЛУЖИВАНИЯ ТАКИХ ЛИЦ 
@@ -448,16 +470,17 @@
 --- лекарственными средствами” мне в подобном праве было отказано, что нарушило мои права 
 --- и создало риск моей жизни и здоровью.
 {{/if}}
+{{/if}}
 
-{{#unless razyasnili_prava}}
+{{#if ne_razyasnili_prava}}
 --- При составлении протокола мне не были разъяснены права и обязанности, что нарушило ч. 3 ст.28.2 КоАП РФ.
-{{/unless}}
+{{/if}}
 
-{{#unless vidali_kopiyu}}
+{{#if ne_vidali_kopiyu}}
 --- Согласно п.6. ст. 28.2 КоАП РФ лицу, в отношении которых возбуждено дело об административном правонарушении, 
 --- вручается под расписку копия протокола об административном правонарушении, однако, в нарушение закона мне такая 
 --- копия выдана не была.
-{{/unless}}
+{{/if}}
 
 {{#if drugie_narusheniya}}
 --- Кроме этого:
