@@ -37,85 +37,122 @@
             $("#fill-form").click(function() { zapolnit_formu() });
             
             function zapolnit_formu() {
-                var source =                             $("#shablon_zhaloby").html();
-                var template =                           Handlebars.compile(source);
+                var familiya =                           $("#familiya").val();
+                var imia =                               $("#imia").val();
+                var otchestvo =                          $("#otchestvo").val();
+
+                var data_zaderzhaniya =                  $("#data_zaderzhaniya").val();
+                var vremya_zaderzhaniya =                $("#vremya_zaderzhaniya").val();
+
                 var policeyskiye_predstavilis =          $("input[name=policeyskiye_predstavilis]:checked").val() == "yes";
                 var obyasnili_prichiny =                 $("input[name=obyasnili_prichiny]:checked").val() == "yes";
-                var narusheniya_pri_zaderzhanii =        !policeyskiye_predstavilis || !obyasnili_prichiny; 
+                var policeyskiye_predstavilis_drugoe =   $("#policeyskiye_predstavilis_drugoe").val();
+                var narusheniya_pri_zaderzhanii =        !policeyskiye_predstavilis || !obyasnili_prichiny;
 
-                var vremya_dostavleniya =                $("#vremya_dostavleniya").val();
+                var fio_zaderzhavshego =                 $("#fio_zaderzhavshego").val()
+                var nomer_zhetona_zaderzhavshego =       $("#nomer_zhetona_zaderzhavshego").val()
+                var nomer_otdela_policii =               $("#nomer_otdela_policii").val()
+
                 var data_dostavleniya =                  $("#data_dostavleniya").val();
-                var vremya_osvobozhdeniya =              $("#vremya_osvobozhdeniya").val();
+                var vremya_dostavleniya =                $("#vremya_dostavleniya").val();
                 var data_osvobozhdeniya =                $("#data_osvobozhdeniya").val();
-                var d = Math.abs(new Date(data_dostavleniya + " " + vremya_dostavleniya) 
+                var vremya_osvobozhdeniya =              $("#vremya_osvobozhdeniya").val();
+                var d = Math.abs(new Date(data_dostavleniya + " " + vremya_dostavleniya)
                                - new Date(data_osvobozhdeniya + " " + vremya_osvobozhdeniya));
                 if ( d > 3600000*3 ) {
                 var derzhali_nezakonno_dolgo = 1};
                 console.log("result", d, new Date());
 
-                var nasilno_sfotografirovali =           $("#nasilno_sfotografirovali").val();
-                var nasilno_daktiloskopirovali =         0; //if nasilno_daktiloskopirovali 
-                var nasilno_vnesli_v_basu =              0; //if nasilno_sfotografirovali or nasilno_daktiloskopirovali
-                var nasilno_sfotografirovali =           0; //if nasilno_sfotografirovali 
-                var nasilno_daktiloskopirovali =         0; //if nasilno_daktiloskopirovali 
-                var narusheniya_pri_dosmotre =           0; //if narusheniya_pri_dosmotr
+                var nasilno_sfotografirovali =           $("input[id=nasilno_sfotografirovali]:checked").val() == "on";
+                var nasilno_daktiloskopirovali =         $("input[id=nasilno_daktiloskopirovali]:checked").val() == "on";
+                var nasilno_vnesli_v_basu =              nasilno_sfotografirovali || nasilno_daktiloskopirovali;
+                console.log(nasilno_sfotografirovali, nasilno_daktiloskopirovali, nasilno_vnesli_v_basu);
+
+                var dosmotreli_bez_osnovaniy =           $("input[id=dosmotreli_bez_osnovaniy]:checked").val() == "on";
+                var dosmatrivali_bez_ponyatih =          $("input[id=dosmatrivali_bez_ponyatih]:checked").val() == "on";
+                var dosmatrival_chelovek_drugogo_pola =  $("input[id=dosmatrival_chelovek_drugogo_pola]:checked").val() == "on";
+                var ne_bilo_protocola =                  $("input[id=ne_bilo_protocola]:checked").val() == "on";
+                var narusheniya_pri_dosmotre =           dosmotreli_bez_osnovaniy || dosmatrivali_bez_ponyatih ||
+                                                         dosmatrival_chelovek_drugogo_pola || ne_bilo_protocola;
+                console.log(dosmotreli_bez_osnovaniy, dosmatrivali_bez_ponyatih, dosmatrival_chelovek_drugogo_pola,
+                            ne_bilo_protocola, narusheniya_pri_dosmotre)
+
+                var ne_predostavleno_pitanie =           $("input[id=ne_predostavleno_pitanie]:checked").val() == "on";
+                var ne_predostavleni_lekarstva =         $("input[id=ne_predostavleni_lekarstva]:checked").val() == "on";
+                var ne_predostavleno_spalnoe_mesto =     $("input[id=ne_predostavleno_spalnoe_mesto]:checked").val() == "on";
+                var bilo_tesno =                         $("input[id=bilo_tesno]:checked").val() == "on";
+                var ne_dali_rasmestitsya =               ne_predostavleno_spalnoe_mesto || bilo_tesno;
+                var ne_bilo_usloviy =                    ne_predostavleno_pitanie ||  ne_predostavleni_lekarstva ||
+                                                         ne_predostavleno_spalnoe_mesto || bilo_tesno;
+                console.log(ne_predostavleno_pitanie, ne_predostavleni_lekarstva,
+                            bilo_tesno, ne_predostavleno_spalnoe_mesto, ne_bilo_usloviy)
+
+                var ne_razyasnili_prava =                $("input[id=ne_razyasnili_prava]:checked").val() == "on";
+                var ne_vidali_kopiyu =                   $("input[id=ne_vidali_kopiyu]:checked").val() == "on";
+
+                var drugie_narusheniya =                 document.drugie_narusheniya;
+                var trebovaniya =                        document.trebovaniya;
+                
+                var source =                             $("#shablon_zhaloby").html();
+                var template =                           Handlebars.compile(source);
 
                 document.drugie_narusheniya = "";
                 $("#drugie_narusheniya div.checkbox").each(function() {
                     if ($(this).find("input").is(":checked")) {
-                        document.drugie_narusheniya += "- " + $(this).text() + ";\n"; }}); 
+                        document.drugie_narusheniya += "--- - " + $(this).text() + ";\n"; }});
                 document.trebovaniya = "";
                 $("#trebovaniya div.checkbox").each(function() {
                     if ($(this).find("input").is(":checked")) {
-                        document.trebovaniya += "- " + $(this).text() + ";\n"; }});
+                        document.trebovaniya += "--- - " + $(this).text() + ";\n"; }});
 
                 $("#zhaloba").html(
                 template({
-                    familiya:                            $("#familiya").val(),
-                    imia:                                $("#imia").val(),
-                    otchestvo:                           $("#otchestvo").val(),
+                    familiya:                            familiya,
+                    imia:                                imia,
+                    otchestvo:                           otchestvo,
 
-                    data_zaderzhaniya:                   $("#data_zaderzhaniya input").val(),
-                    vremya_zaderzhaniya:                 $("#vremya_zaderzhaniya input").val(),
+                    data_zaderzhaniya:                   data_zaderzhaniya,
+                    vremya_zaderzhaniya:                 vremya_zaderzhaniya,
 
                     narusheniya_pri_zaderzhanii:         narusheniya_pri_zaderzhanii,
                     policeyskiye_predstavilis:           policeyskiye_predstavilis,
-                    policeyskiye_predstavilis_drugoe:    $("#policeyskiye_predstavilis_drugoe").val(),
+                    policeyskiye_predstavilis_drugoe:    policeyskiye_predstavilis_drugoe,
                     obyasnili_prichiny:                  obyasnili_prichiny,
 
-                    fio_zaderzhavshego:                  $("#fio_zaderzhavshego").val(),
-                    nomer_zhetona_zaderzhavshego:        $("#nomer_zhetona_zaderzhavshego").val(),
-                    nomer_otdela_policii:                $("#nomer_otdela_policii").val(),
+                    fio_zaderzhavshego:                  fio_zaderzhavshego,
+                    nomer_zhetona_zaderzhavshego:        nomer_zhetona_zaderzhavshego,
+                    nomer_otdela_policii:                nomer_otdela_policii,
 
-                    data_dostavleniya:                   $("#data_osvobozhdeniya").val(),
-                    vremya_dostavleniya:                 $("#vremya_zaderzhaniya").val(),
-
+                    data_dostavleniya:                   data_dostavleniya,
+                    vremya_dostavleniya:                 vremya_dostavleniya,
+                    data_osvobozhdeniya:                 data_osvobozhdeniya,
+                    vremya_osvobozhdeniya:               vremya_zaderzhaniya,
                     derzhali_nezakonno_dolgo:            derzhali_nezakonno_dolgo,
-                    data_osvobozhdeniya:                 $("#data_osvobozhdeniya").val(),
-                    vremya_osvobozhdeniya:               $("#vremya_zaderzhaniya").val(),
 
                     nasilno_vnesli_v_basu:               nasilno_vnesli_v_basu,
-                    nasilno_sfotografirovali:            $("#nasilno_sfotografirovali").val(),
-                    nasilno_daktiloskopirovali:          $("#nasilno_daktiloskopirovali").val(),
+                    nasilno_sfotografirovali:            nasilno_sfotografirovali,
+                    nasilno_daktiloskopirovali:          nasilno_daktiloskopirovali,
 
                     narusheniya_pri_dosmotre:            narusheniya_pri_dosmotre,
-                    dosotreli_bez_osnovaniy:             0,
-                    dosmatrivali_bez_ponyatih:           0,
-                    dosmatrival_chelovek_drugogo_pola:   0,
-                    ne_bilo_protocola:                   0,
+                    dosmotreli_bez_osnovaniy:            dosmotreli_bez_osnovaniy,
+                    dosmatrivali_bez_ponyatih:           dosmatrivali_bez_ponyatih,
+                    dosmatrival_chelovek_drugogo_pola:   dosmatrival_chelovek_drugogo_pola,
+                    ne_bilo_protocola:                   ne_bilo_protocola,
 
-                    ne_predostavleno_pitanie_spalnoe_mesto_lekarstva:    0,
-                    ne_predostavleno_pitanie:            0,
-                    bilo_tesno:                          0,
-                    ne_predostavleni_lekarstva:          0,
+                    ne_bilo_usloviy:                     ne_bilo_usloviy,
+                    ne_dali_rasmestitsya:                ne_dali_rasmestitsya,
+                    ne_predostavleno_pitanie:            ne_predostavleno_pitanie,
+                    bilo_tesno:                          bilo_tesno,
+                    ne_predostavleni_lekarstva:          ne_predostavleni_lekarstva,
+                    ne_predostavleno_spalnoe_mesto:      ne_predostavleno_spalnoe_mesto,
 
-                    ne_razyasnili_prava:                 0,
-                    ne_vidali_kopiyu:                    0,
+                    ne_razyasnili_prava:                 ne_razyasnili_prava,
+                    ne_vidali_kopiyu:                    ne_vidali_kopiyu,
                     drugie_narusheniya:                  document.drugie_narusheniya,
                     trebovaniya:                         document.trebovaniya
-                }));
-            };
-        });
+                }))
+            }
+        })
     </script>
 </head>
 <body>
@@ -315,7 +352,7 @@
                         <div class="checkbox"><label><input id="nasilno_daktiloskopirovali" type="checkbox"/>К Вам применялось насильственное дактилоскопирование (против вашей воли или если не было разъяснено, что эта процедура добровольна)?</label></div>
                         <div class="checkbox"><label><input id="ne_predostavleno_spalnoe_mesto" type="checkbox"/>Вы провели в отделе ночь, но Вам не было предоставлено спальное место (то есть лавка, матрас и постельное белье)</label></div>
                         <div class="checkbox"><label><input id="bilo_tesno" type="checkbox"/>Вам было тесно в камере (то есть на Вас приходилось меньше двух квадратных метров площади камеры)</label></div>
-                        <div class="checkbox"><label><input id="ne_dali_poest" type="checkbox"/>Вы находились в отделе полиции больше трех часов, но Вам не было предоставлено горячее питание</label></div>
+                        <div class="checkbox"><label><input id="ne_predostavleno_pitanie" type="checkbox"/>Вы находились в отделе полиции больше трех часов, но Вам не было предоставлено горячее питание</label></div>
                         <div class="checkbox"><label><input id="ne_razyasnili_prava" type="checkbox"/>Вам не разъясняли Ваши права во время заполнения протокола</label></div>
                         <div class="checkbox"><label><input id="ne_vidali_kopiyu" type="checkbox"/>Вам отказались выдать копию протокола</label></div></div></div>
 
@@ -416,7 +453,7 @@
 {{#if narusheniya_pri_dosmotre}}
 --- Полицейские  провели личный досмотр, порядок которого регламентирован ст. 27.7 КоАП РФ и был нарушен 
 в отношении меня:
-{{#if dosotreli_bez_osnovaniy}}
+{{#if dosmotreli_bez_osnovaniy}}
 --- - в нарушение пункта 1 указанной статьи досмотр был произведен без достаточных оснований. 
 {{/if}}
 {{#if dosmatrivali_bez_ponyatih}}
@@ -434,7 +471,7 @@
 {{/if}}
 {{/if}}
 
-{{#if ne_predostavleno_pitanie_spalnoe_mesto_lekarstva}}
+{{#if ne_bilo_usloviy}}
 --- В ходе моего содержания в отделении полиции были нарушены пункты ПОЛОЖЕНИЯ ОБ УСЛОВИЯХ СОДЕРЖАНИЯ ЛИЦ,
 --- ЗАДЕРЖАННЫХ ЗА АДМИНИСТРАТИВНОЕ ПРАВОНАРУШЕНИЕ, НОРМАХ ПИТАНИЯ И ПОРЯДКЕ МЕДИЦИНСКОГО ОБСЛУЖИВАНИЯ ТАКИХ ЛИЦ
 --- (в ред. Постановлений Правительства РФ от 01.02.2005 N 49, от 26.01.2011 N 24, от 04.09.2012 N 882,
@@ -445,9 +482,9 @@
 --- от 01.02.2005 N 49, от 26.01.2011 N 24, от 04.09.2012 N 882, от 26.11.2013 N 1069)  
 --- п. 4. устанавливает, что «Задержанные на срок более 3 часов лица обеспечиваются питанием по норме питания,
 --- утвержденной Постановлением Правительства Российской Федерации от 11 апреля 2005 г. N 205». 
---- Несмотря на это я не был обеспечен питанием.
+--- - Несмотря на это я не был обеспечен питанием.
 {{/if}}
-{{#if ne_predostavleno_spalnoe_mesto}}_
+{{#if ne_dali_rasmestitsya}}_
 --- ПОЛОЖЕНИЕ ОБ УСЛОВИЯХ СОДЕРЖАНИЯ ЛИЦ, ЗАДЕРЖАННЫХ ЗА АДМИНИСТРАТИВНОЕ ПРАВОНАРУШЕНИЕ, 
 --- НОРМАХ ПИТАНИЯ И ПОРЯДКЕ МЕДИЦИНСКОГО ОБСЛУЖИВАНИЯ ТАКИХ ЛИЦ (в ред. Постановлений Правительства РФ 
 --- от 01.02.2005 N 49, от 26.01.2011 N 24, от 04.09.2012 N 882, от 26.11.2013 N 1069) 
@@ -455,11 +492,11 @@
 --- на скамьях (диванах). Норма площади, устанавливаемая для одного задержанного лица, составляет не менее 
 --- 2 кв. метров. Задержанные на срок более 3 часов лица обеспечиваются в ночное время местом для сна». 
 --- Несмотря на это:
-{{#if ne_predostavleno_spalnoe_mesto}}
---- мне не было предоставлено место для сна.
-{{/if}} 
+{{#if ne_predostavleno_spalnoe_mesto}}_
+--- - Мне не было предоставлено место для сна.
+{{/if}}
 {{#if bilo_tesno}}
---- мне было тесно и приходящаяся на меня площадь составляла меньше двух квадратных метров.
+--- - Мне было тесно и приходящаяся на меня площадь составляла меньше двух квадратных метров.
 {{/if}}
 {{/if}}
 {{#if ne_predostavleni_lekarstva}}
