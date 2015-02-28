@@ -37,10 +37,8 @@
             $("#fill-form").click(function() { zapolnit_formu() });
             
             function zapolnit_formu() {
-                var familiya =                           $("#familiya").val();
-                var imia =                               $("#imia").val();
-                var otchestvo =                          $("#otchestvo").val();
-
+                var fio =                                $("#fio").val();
+               
                 var data_zaderzhaniya =                  $("#data_zaderzhaniya").val();
                 var vremya_zaderzhaniya =                $("#vremya_zaderzhaniya").val();
 
@@ -107,10 +105,8 @@
 
 //                $("#zhaloba").html(
                 var result = template({
-                    familiya:                            familiya,
-                    imia:                                imia,
-                    otchestvo:                           otchestvo,
-
+                    fio:                                 fio,
+                    
                     data_zaderzhaniya:                   data_zaderzhaniya,
                     vremya_zaderzhaniya:                 vremya_zaderzhaniya,
 
@@ -187,14 +183,8 @@
 
         <div class="row">
             <form class="form-horizontal" role="form">
-                <div class="form-group"><label class="control-label col-sm-3">Фамилия</label>
-                    <div class="col-sm-9"><input type="text" class="form-control" name="family-name" id="familiya" placeholder="Фамилия"/></div></div>
-
-                <div class="form-group"><label class="control-label col-sm-3">Имя</label>
-                    <div class="col-sm-9"><input type="text" class="form-control" name="first-name" id="imia" placeholder="Имя"/></div></div>
-
-                <div class="form-group"><label class="control-label col-sm-3">Отчество</label>
-                    <div class="col-sm-9"><input type="text" class="form-control" name="middle-name" id="otchestvo" placeholder="Отчество"/></div></div>
+                <div class="form-group"><label class="control-label col-sm-3">Фамилия Имя Отчество</label>
+                    <div class="col-sm-9"><input type="text" class="form-control" name="fio-name" id="fio" placeholder="ФИО"/></div></div>
 
                 <div class="form-group"><label for="" class="control-label col-sm-3">Когда Вас задержали?</label>
                     <div class="col-sm-9 form-inline">
@@ -409,7 +399,7 @@
                 <textarea id="shablon_zhaloby" class="hidden">
 --- ЗАЯВЛЕНИЕ
 ---
---- Я, {{familiya}} {{imia}} {{otchestvo}}, был задержан {{data_zaderzhaniya}} в {{vremya_zaderzhaniya}}.
+--- Я, {{fio}}, был задержан {{data_zaderzhaniya}} в {{vremya_zaderzhaniya}}.
 {{#if narusheniya_pri_zaderzhanii}}
 --- Задержавшие меня сотрудники: 
 {{#unless policeyskiye_predstavilis}}
