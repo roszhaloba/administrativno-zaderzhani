@@ -38,19 +38,22 @@
             
             function zapolnit_formu() {
                 var fio =                                $("#fio").val();
+                var god_rojdeniya =                      $("#god_rojdeniya").val();
+                var pol =                                $("#pol").val();
+                var email =                              $("#email").val();
+                var telefon =                            $("#telefon").val();
                
                 var data_zaderzhaniya =                  $("#data_zaderzhaniya").val();
                 var vremya_zaderzhaniya =                $("#vremya_zaderzhaniya").val();
-
                 var policeyskiye_predstavilis =          $("input[name=policeyskiye_predstavilis]:checked").val() == "yes";
                 var obyasnili_prichiny =                 $("input[name=obyasnili_prichiny]:checked").val() == "yes";
                 var policeyskiye_predstavilis_drugoe =   $("#policeyskiye_predstavilis_drugoe").val();
+                var fio_zaderzhavshego =                 $("#fio_zaderzhavshego").val();
+                var nomer_zhetona_zaderzhavshego =       $("#nomer_zhetona_zaderzhavshego").val();
+                var zvanie_zaderzhavshego =              $("#zvanie_zaderzhavshego").val();
                 var narusheniya_pri_zaderzhanii =        !policeyskiye_predstavilis || !obyasnili_prichiny;
-
-                var fio_zaderzhavshego =                 $("#fio_zaderzhavshego").val()
-                var nomer_zhetona_zaderzhavshego =       $("#nomer_zhetona_zaderzhavshego").val()
+                
                 var nomer_otdela_policii =               $("#nomer_otdela_policii").val()
-
                 var data_dostavleniya =                  $("#data_dostavleniya").val();
                 var vremya_dostavleniya =                $("#vremya_dostavleniya").val();
                 var data_osvobozhdeniya =                $("#data_osvobozhdeniya").val();
@@ -106,6 +109,11 @@
 //                $("#zhaloba").html(
                 var result = template({
                     fio:                                 fio,
+                    god_rojdeniya:                       god_rojdeniya,
+                    pol:                                 pol,
+                    email:                               email,
+                    telefon:                             telefon,
+                    
                     
                     data_zaderzhaniya:                   data_zaderzhaniya,
                     vremya_zaderzhaniya:                 vremya_zaderzhaniya,
@@ -176,6 +184,9 @@
                     <li>
                         Поможем Вам составить жалобу на условие содержания.
                     </li>
+                    <li>
+                        E-mail и номер телефона не будут переданы в органы власти, а нужны для оперативной связи с Вами.
+                    </li>
                 </ol>
             </div>
         </div>
@@ -185,7 +196,24 @@
             <form class="form-horizontal" role="form">
                 <div class="form-group"><label class="control-label col-sm-3">Фамилия Имя Отчество</label>
                     <div class="col-sm-9"><input type="text" class="form-control" name="fio-name" id="fio"/></div></div>
-
+                
+                <div class="form-group"><label for="" class="control-label col-sm-3">Дата рождения</label>
+                    <div class="col-sm-9 form-inline">
+                        <div id="god_rojdeniya" class="bfh-datepicker input-group" data-format="d.m.y"></div></div></div>
+                        
+                        <div class="form-group">
+                    <div class="control-label col-sm-3"><label>Представились ли сотрудники полиции?</label></div>
+                    <div class="col-sm-9">
+                        <div class="radio"><label><input class="test1" name="pol" type="radio" value="yes"/>Женский</label></div>
+                        <div class="radio"><label><input class="test1" name="pol" type="radio" value="no"/>Мужской</label></div>
+                        <div class="radio"><label><input class="test1" name="pol" type="radio" value="other"/>Иное:</label><br/></div></div></div>
+                        
+                    <div class="form-group"><label class="control-label col-sm-3">E-mail</label>
+                        <div class="col-sm-9"><input type="text" class="form-control" name="email-name" id="email"/></div></div>
+                        
+                    <div class="form-group"><label class="control-label col-sm-3">Телефон</label>
+                        <div class="col-sm-9"><input type="text" class="form-control" name="telefon-name" id="telefon"/></div></div>    
+                
                 <div class="form-group"><label for="" class="control-label col-sm-3">Когда Вас задержали?</label>
                     <div class="col-sm-9 form-inline">
                         <div id="data_zaderzhaniya" class="bfh-datepicker input-group" data-format="d.m.y"></div>
@@ -399,7 +427,7 @@
                 <textarea id="shablon_zhaloby" class="hidden">
 --- ЗАЯВЛЕНИЕ
 ---
---- Я, {{fio}}, был задержан {{data_zaderzhaniya}} в {{vremya_zaderzhaniya}}.
+--- Я, {{fio}}, {{god_rojdeniya}} года рождения, был задержан {{data_zaderzhaniya}} в {{vremya_zaderzhaniya}}.
 {{#if narusheniya_pri_zaderzhanii}}
 --- Задержавшие меня сотрудники: 
 {{#unless policeyskiye_predstavilis}}
